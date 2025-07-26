@@ -9,6 +9,7 @@
         /* --- CSS Reset & Global Styles --- */
         :root {
             --primary-color: #00bfa5;
+            --secondary-color: #ff9800; /* 用于特殊标签的颜色 */
             --bg-color: #10121a; /* 稍带蓝调的深色背景 */
             --card-bg-color: #1e2029;
             --text-color: #e0e0e0;
@@ -192,6 +193,13 @@
             font-size: 0.8rem;
             font-weight: 500;
         }
+        
+        /* --- 新增特殊标签样式 --- */
+        .project-tags .tag.special {
+            background-color: rgba(255, 152, 0, 0.15);
+            color: var(--secondary-color);
+        }
+
 
         .project-links {
             display: flex;
@@ -270,7 +278,7 @@
             font-size: 0.9rem;
         }
 
-        /* --- Video Modal (Left Video, Right Details) --- */
+        /* --- Modal (通用模态框) --- */
         .modal {
             position: fixed;
             top: 0;
@@ -307,33 +315,78 @@
         .modal-layout {
             display: grid;
             grid-template-columns: 60% 1fr; /* 左60% 右40% */
+            height: calc(100% - 40px); /* 减去顶部标题栏高度 */
+             overflow: hidden;
+        }
+
+        /* --- 新增：模态框头部 --- */
+        .modal-header {
+            padding: 0 30px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h3 {
+             font-size: 1.6rem;
+             color: var(--primary-color);
+        }
+
+        .modal-content-wrapper {
+            display: grid;
+            grid-template-columns: 60% 1fr; /* 左60% 右40% */
             height: 100%;
             overflow: hidden;
         }
 
-        .modal-video-wrapper {
+
+        .modal-media-wrapper {
             background-color: #000;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative; /* 为导航按钮定位 */
         }
         
-        .modal-video {
+        .modal-video, .modal-gallery-image {
             width: 100%;
             height: 100%;
             object-fit: contain;
         }
+
+        /* --- 新增：图库导航 --- */
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: none; /* 默认隐藏 */
+        }
+        .gallery-nav:hover {
+            background-color: var(--primary-color);
+        }
+        #galleryPrev { left: 15px; }
+        #galleryNext { right: 15px; }
         
         .modal-details-wrapper {
             padding: 30px;
             color: var(--text-color);
-            overflow-y: auto; /* 当内容超长时，允许滚动 */
+            overflow-y: auto;
         }
         
-        .modal-details-wrapper h3 {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
+        .modal-details-wrapper h4 { /* 之前是h3, 改为h4，因为h3用在了header */
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 20px;
         }
         
         #modalProjectTags {
@@ -351,7 +404,12 @@
             font-size: 0.85rem;
             font-weight: 500;
         }
-        
+        /* 新增：特殊标签在modal中的样式 */
+        #modalProjectTags .tag.special {
+             background-color: rgba(255, 152, 0, 0.15);
+             color: var(--secondary-color);
+        }
+
         #modalProjectDescription {
             font-size: 1rem;
             line-height: 1.8;
@@ -359,22 +417,23 @@
         }
         
         #modalProjectDescription ul {
-            list-style-type: none; /* 去掉默认的项目符号 */
+            list-style-type: none;
             padding-left: 0;
         }
         
         #modalProjectDescription li {
             position: relative;
-            padding-left: 25px; /* 为自定义项目符号留出空间 */
+            padding-left: 25px;
             margin-bottom: 15px;
         }
         #modalProjectDescription li::before {
-            content: ""; /* 使用您提供的项目符号 */
+            content: ""; 
             position: absolute;
             left: 0;
-            color: var(--primary-color); /* 让项目符号和主题色一致 */
+            color: var(--primary-color);
             font-weight: bold;
         }
+
 
         .modal-close {
             position: absolute;
@@ -390,7 +449,7 @@
             height: 40px;
             line-height: 40px;
             text-align: center;
-            z-index: 10;
+            z-index: 1011; /* 比modal-header高 */
             transition: transform 0.3s ease, background-color 0.3s ease;
         }
         .modal-close:hover {
@@ -398,20 +457,19 @@
             background-color: var(--primary-color);
         }
 
-        /* 响应式布局：小屏幕上模态框堆叠 */
         @media (max-width: 992px) {
-            .modal-layout {
+            .modal-content-wrapper {
                 grid-template-columns: 1fr; /* 变为单列 */
-                grid-template-rows: auto 1fr; /* 上视频下详情 */
+                grid-template-rows: auto 1fr; /* 上媒体下详情 */
             }
-            .modal-video-wrapper {
-                 height: 40vh; /* 在移动端给视频一个固定的高度 */
+            .modal-media-wrapper {
+                 height: 40vh; /* 在移动端给媒体一个固定的高度 */
             }
             .modal-details-wrapper {
                 padding: 25px;
             }
-            .modal-details-wrapper h3 {
-                font-size: 1.5rem;
+            .modal-header h3 {
+                font-size: 1.3rem;
             }
         }
     </style>
@@ -422,7 +480,7 @@
         <div class="fade-in">
             <h1>您好，很荣幸与您在此相遇</h1>
             <p class="subtitle">
-                我是一名热衷于让科技变得有乐趣的职场新人。初来乍到，往后请多多指点。
+                我是一名热衷于让科技变得有乐趣的行业新人。初来乍到，往后请您多多指教。
             </p>
             <a href="#projects" class="hero-cta">点击查看我的作品</a>
         </div>
@@ -442,12 +500,26 @@
                         </div>
                         <p>主导开发集可视化管理与AI智能助理于一体的智能家居平台。实现了从前端、后端到AI模型的全栈构建，荣获校级二等奖。</p>
                         <div class="project-links">
-                            <button class="btn-demo"><i class="fas fa-play"></i> 观看演示</button>
+                            <button class="btn-demo" data-type="video"><i class="fas fa-play"></i> 观看演示</button>
                              <a href="#" class="btn-source" target="_blank" rel="noopener noreferrer"><i class="fas fa-code"></i> 待开源</a> 
                         </div>
                     </div>
                 </article>
 
+                <article class="project-card fade-in" data-project-id="ai-home-poc">
+                    <img src="https://f004.backblazeb2.com/file/image-num1/res/image/difytest.png" alt="爱尚智慧家+ AI能力演示" class="project-card-image">
+                    <div class="project-card-content">
+                        <h3>爱尚智慧家+ (AI能力演示)</h3>
+                        <div class="project-tags">
+                            <span class="tag special">概念验证</span>
+                            <span class="tag">Dify</span><span class="tag">OpenAPI</span><span class="tag">LLM</span><span class="tag">Flask</span>
+                        </div>
+                        <p>专项展示“爱尚智慧家+”项目中，AI助手通过调用后端API控制智能家居的核心工作流程。此部分为待整合的概念验证（PoC）。</p>
+                        <div class="project-links">
+                            <button class="btn-demo" data-type="gallery"><i class="fas fa-images"></i> 查看详情</button>
+                        </div>
+                    </div>
+                </article>
                 <article class="project-card fade-in" data-project-id="iflytek-car">
                     <img src="https://f004.backblazeb2.com/file/image-num1/res/image/iflytekucar02.png" alt="讯飞智能车" class="project-card-image">
                     <div class="project-card-content">
@@ -457,7 +529,7 @@
                         </div>
                         <p>作为队长负责核心视觉系统开发。基于YOLOv8n在RK3588 NPU上实现29FPS实时推理，通过优化与量化，实现高精度目标检测与精准停靠。</p>
                         <div class="project-links">
-                            <button class="btn-demo"><i class="fas fa-play"></i> 观看演示</button>
+                            <button class="btn-demo" data-type="video"><i class="fas fa-play"></i> 观看演示</button>
                         </div>
                     </div>
                 </article>
@@ -471,7 +543,7 @@
                         </div>
                         <p>独立主导完成一款创新型多功能PCB校园卡，集成了NFC、刻度尺和校园地图。已作为校园文创纪念品，并支持接入米家生态。</p>
                         <div class="project-links">
-                            <button class="btn-demo"><i class="fas fa-play"></i> 观看演示</button>
+                            <button class="btn-demo" data-type="video"><i class="fas fa-play"></i> 观看演示</button>
                         </div>
                     </div>
                 </article>
@@ -485,7 +557,7 @@
                         </div>
                         <p>独立开发的多功能Linux图形化音乐播放器。采用模块化设计，利用miniaudio处理音频，Dear ImGui构建GUI，并集成语音合成功能。</p>
                         <div class="project-links">
-                             <button class="btn-demo"><i class="fas fa-play"></i> 观看演示</button>
+                             <button class="btn-demo" data-type="video"><i class="fas fa-play"></i> 观看演示</button>
                             <a href="https://gitee.com/YOUNGQI-LYQ/music-player.git" class="btn-source" target="_blank" rel="noopener noreferrer"><i class="fab fa-gitee"></i> 查看源码</a>
                         </div>
                     </div>
@@ -500,7 +572,7 @@
                         </div>
                         <p>在Linux环境下开发的交互式多功能嵌入式媒体应用。实现了电子相册、TTS电子书阅读器和电子琴功能。直接操作Framebuffer进行渲染。</p>
                         <div class="project-links">
-                            <button class="btn-demo"><i class="fas fa-play"></i> 观看演示</button>
+                            <button class="btn-demo" data-type="video"><i class="fas fa-play"></i> 观看演示</button>
                             <a href="https://gitee.com/YOUNGQI-LYQ/ubuntu-lcd-multimedia-terminal.git" class="btn-source" target="_blank" rel="noopener noreferrer"><i class="fab fa-gitee"></i> 查看源码</a>
                         </div>
                     </div>
@@ -515,7 +587,7 @@
                         </div>
                         <p>合作开发的智能居家安全巡检系统。负责项目规划、架构梳理与技术文档撰写。完成巡检小车与“桌宠”机器人的硬件联调。</p>
                         <div class="project-links">
-                            <button class="btn-demo"><i class="fas fa-play"></i> 观看演示</button>
+                            <button class="btn-demo" data-type="video"><i class="fas fa-play"></i> 观看演示</button>
                         </div>
                     </div>
                 </article>
@@ -529,7 +601,7 @@
                         </div>
                         <p>合作开发的高精度数字功率计。负责SPI接口的LCD图形界面开发，实现电流、电压、功率的实时数字与动态图表显示。</p>
                         <div class="project-links">
-                             <button class="btn-demo"><i class="fas fa-play"></i> 观看演示</button>
+                             <button class="btn-demo" data-type="video"><i class="fas fa-play"></i> 观看演示</button>
                             <a href="https://gitee.com/YOUNGQI-LYQ/power-monitior.git" class="btn-source" target="_blank" rel="noopener noreferrer"><i class="fab fa-gitee"></i> 查看源码</a>
                         </div>
                     </div>
@@ -556,18 +628,26 @@
         <p>&copy; 2025 YOUNGQI. All Rights Reserved.</p>
     </footer>
 
-    <div class="modal" id="videoModal">
+    <!-- ==================== 模态框 HTML 结构修改 ==================== -->
+    <div class="modal" id="projectModal">
         <div class="modal-container">
             <button class="modal-close" id="modalClose">&times;</button>
-            <div class="modal-layout">
-                <div class="modal-video-wrapper">
-                    <video class="modal-video" id="modalVideoPlayer" controls preload="metadata">
+            <div class="modal-header">
+                <h3 id="modalProjectTitle"></h3>
+            </div>
+            <div class="modal-content-wrapper">
+                <div class="modal-media-wrapper">
+                    <!-- 视频播放器 -->
+                    <video class="modal-video" id="modalVideoPlayer" controls preload="metadata" style="display: none;">
                          <source src="" type="video/mp4">
                          您的浏览器不支持Video标签。
                     </video>
+                    <!-- 图库查看器 -->
+                    <img src="" alt="项目截图" class="modal-gallery-image" id="modalGalleryImage" style="display: none;">
+                    <button id="galleryPrev" class="gallery-nav">&lt;</button>
+                    <button id="galleryNext" class="gallery-nav">&gt;</button>
                 </div>
                 <div class="modal-details-wrapper">
-                    <h3 id="modalProjectTitle"></h3>
                     <div id="modalProjectTags"></div>
                     <div id="modalProjectDescription"></div>
                 </div>
@@ -578,6 +658,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
+    // ==================== 项目数据 ====================
     const projectData = {
         'ai-home': {
             title: '爱尚智慧家+',
@@ -593,6 +674,41 @@ document.addEventListener('DOMContentLoaded', () => {
                     <li>大模型微调部分通过自行蒸馏DeepSeekV3模型，并引入评分模型对原始数据进行高质量筛选与清洗。精心构建包含模型身份认定、居家对话、情感分析、居家百科等多样化居家场景合成语料。同时合理配比引入CoT数据集，有效强化模型在居家场景的逻辑推理能力与综合表现，确保其专业性与鲁棒性。</li>
                 </ul>`
         },
+        // ==================== 新增的项目数据结构 Start ====================
+        'ai-home-poc': {
+            title: '爱尚智慧家+ (AI能力演示)',
+            tags: [ {text:'概念验证', special: true}, 'Dify', 'OpenAPI', 'LLM', 'Flask'],
+            // galleryItems 是一个数组，每个对象代表一张图和它的说明
+            // 请在此处填充您的图片URL
+            galleryItems: [
+                {
+                    imgSrc: 'https://f004.backblazeb2.com/file/image-num1/res/image/deepseekv3api.png', // 请在此处粘贴 '通过deepseekv3...内容.png' 的URL
+                    description: `<h4>1. 通过DeepSeek-V3 API生成优质中文对话内容</h4>
+                                <p>利用DeepSeek-V3大语言模型API蒸馏模型优质中文生成内容并配引入评分模型筛选构建高质量数据集；并融合自建的居家场景语料与开源 CoT 数据集，强化模型在垂直领域的逻辑推理与对话能力</p>`
+                },
+                {
+                    imgSrc: 'https://f004.backblazeb2.com/file/image-num1/res/image/openapi.png', // 请在此处粘贴 'OpenAPI配置描述.png' 的URL
+                    description: `<h4>2. OpenAPI工具配置</h4>
+                                <p>在Dify平台中，将优化后的Schema配置为AI可用的工具。通过标准的OpenAPI规范进行描述，使得AI能够理解每个API端点的功能、所需参数及预期返回，从而在对话中智能地决定何时、如何调用这些后端服务。</p>`
+                },
+                {
+                    imgSrc: 'https://f004.backblazeb2.com/file/image-num1/res/image/flaskapi.png', // 请在此处粘贴 'Flask的API服务.png' 的URL
+                    description: `<h4>3. 后端Flask API服务</h4>
+                                <p>使用Python的Flask框架搭建轻量而高效的后端API服务。这些API接口是智能家居控制的执行者，负责接收来自AI的指令（例如开关灯、调节空调），并通过MQTT协议与实体设备进行通信，将AI的决策转化为物理世界的真实操作。</p>`
+                },
+                {
+                    imgSrc: 'https://f004.backblazeb2.com/file/image-num1/res/image/difytest.png', // 请在此处粘贴 'Dify测试工具使用效果.png' 的URL
+                    description: `<h4>4. Dify平台工具调用测试</h4>
+                                <p>在Dify的调试界面中，对配置好的工具进行直接测试。输入自然语言指令，观察AI是否能正确解析意图、匹配到相应的工具，并生成正确的API调用请求。这一步验证了整个逻辑链路的通畅性。</p>`
+                },
+                {
+                    imgSrc: 'https://f004.backblazeb2.com/file/image-num1/res/image/mqtttest.png', // 请在此处粘贴 '接入模拟器测试.png' 的URL
+                    description: `<h4>5. 接入模拟器端到端测试</h4>
+                                <p>最终，将AI助手接入模拟的家居环境进行端到端测试。用户通过对话界面与AI交互，AI调用后端API，API通过MQTT控制模拟器中的设备。这张图展示了用户说“打开客厅灯”后，AI成功调用API，模拟器中的灯光状态也相应改变，完成了整个控制闭环。</p>`
+                }
+            ]
+        },
+        // ==================== 新增的项目数据结构 End ======================
         'iflytek-car': {
             title: '讯飞智能车智慧生活赛',
             videoSrc: 'https://f004.backblazeb2.com/file/image-num1/video/iflytek-Ucar02.mp4',
@@ -673,16 +789,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // --- 页面滚动动画 ---
     const animatedElements = document.querySelectorAll('.fade-in');
     if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry, index) => {
                 if (entry.isIntersecting) {
-                    const isCard = entry.target.classList.contains('project-card');
-                    const delay = isCard ? (index % 3) * 100 : 0; // Stagger animation for cards in a row
-                    setTimeout(() => {
-                         entry.target.classList.add('is-visible');
-                    }, delay);
+                    entry.target.classList.add('is-visible');
                     observer.unobserve(entry.target);
                 }
             });
@@ -692,19 +805,51 @@ document.addEventListener('DOMContentLoaded', () => {
         animatedElements.forEach(el => el.classList.add('is-visible'));
     }
 
-    const videoModal = document.getElementById('videoModal');
-    const modalVideoPlayer = document.getElementById('modalVideoPlayer');
+    // ==================== 模态框逻辑 (已重构以支持多类型) ====================
+    const modal = document.getElementById('projectModal');
     const modalCloseBtn = document.getElementById('modalClose');
     const demoButtons = document.querySelectorAll('.btn-demo');
     
+    // Modal 内部元素
     const modalTitleEl = document.getElementById('modalProjectTitle');
     const modalTagsEl = document.getElementById('modalProjectTags');
     const modalDescriptionEl = document.getElementById('modalProjectDescription');
+    const modalVideoPlayer = document.getElementById('modalVideoPlayer');
+    const modalGalleryImage = document.getElementById('modalGalleryImage');
+    const galleryNavPrev = document.getElementById('galleryPrev');
+    const galleryNavNext = document.getElementById('galleryNext');
+    
+    let currentGalleryItems = [];
+    let currentGalleryIndex = 0;
 
+    // --- 显示幻灯片 ---
+    function showSlide(index) {
+        if (!currentGalleryItems || currentGalleryItems.length === 0) return;
+        currentGalleryIndex = index;
+        const slide = currentGalleryItems[index];
+
+        modalGalleryImage.src = slide.imgSrc;
+        modalGalleryImage.alt = slide.description.match(/<h4>(.*?)<\/h4>/)[1] || '项目截图'; // 提取h4作为alt
+        modalDescriptionEl.innerHTML = slide.description;
+    }
+
+    // --- 导航按钮事件 ---
+    galleryNavPrev.addEventListener('click', () => {
+        const newIndex = (currentGalleryIndex - 1 + currentGalleryItems.length) % currentGalleryItems.length;
+        showSlide(newIndex);
+    });
+
+    galleryNavNext.addEventListener('click', () => {
+        const newIndex = (currentGalleryIndex + 1) % currentGalleryItems.length;
+        showSlide(newIndex);
+    });
+
+    // --- 打开模态框主逻辑 ---
     demoButtons.forEach(button => {
         button.addEventListener('click', () => {
             const projectCard = button.closest('.project-card');
             const projectId = projectCard.dataset.projectId;
+            const projectType = button.dataset.type; // 'video' 或 'gallery'
             const data = projectData[projectId];
 
             if (!data) {
@@ -712,48 +857,83 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            // --- 通用部分：填充标题和标签 ---
             modalTitleEl.textContent = data.title;
-            modalDescriptionEl.innerHTML = data.description;
-            
             modalTagsEl.innerHTML = '';
-            data.tags.forEach(tagText => {
+            data.tags.forEach(tag => {
                 const tagEl = document.createElement('span');
                 tagEl.className = 'tag';
-                tagEl.textContent = tagText;
+                // 支持带特殊样式的标签对象
+                if (typeof tag === 'object' && tag.text) {
+                    tagEl.textContent = tag.text;
+                    if(tag.special) {
+                        tagEl.classList.add('special');
+                    }
+                } else {
+                    tagEl.textContent = tag;
+                }
                 modalTagsEl.appendChild(tagEl);
             });
 
-            modalVideoPlayer.src = data.videoSrc;
-            modalVideoPlayer.onerror = () => {
-                console.warn(`主视频源 ${data.videoSrc} 加载失败，尝试备用源...`);
-                modalVideoPlayer.src = data.backupSrc;
-                modalVideoPlayer.onerror = null;
-            };
+            // --- 根据类型配置模态框 ---
+            if (projectType === 'gallery') {
+                modalVideoPlayer.style.display = 'none';
+                modalGalleryImage.style.display = 'block';
+                galleryNavPrev.style.display = 'block';
+                galleryNavNext.style.display = 'block';
+                
+                currentGalleryItems = data.galleryItems;
+                showSlide(0); // 初始化显示第一张
 
-            videoModal.classList.add('is-open');
+            } else { // 默认为 video
+                modalGalleryImage.style.display = 'none';
+                galleryNavPrev.style.display = 'none';
+                galleryNavNext.style.display = 'none';
+                modalVideoPlayer.style.display = 'block';
+
+                modalDescriptionEl.innerHTML = data.description;
+                modalVideoPlayer.src = data.videoSrc;
+                modalVideoPlayer.onerror = () => {
+                    console.warn(`主视频源 ${data.videoSrc} 加载失败，尝试备用源...`);
+                    modalVideoPlayer.src = data.backupSrc;
+                    modalVideoPlayer.onerror = null;
+                };
+                modalVideoPlayer.play();
+            }
+
+            modal.classList.add('is-open');
             document.body.style.overflow = 'hidden';
-            modalVideoPlayer.play();
         });
     });
 
+    // --- 关闭模态框 ---
     const closeModal = () => {
-        videoModal.classList.remove('is-open');
+        modal.classList.remove('is-open');
         document.body.style.overflow = '';
+        
+        // 停止视频和重置内容
         modalVideoPlayer.pause();
         modalVideoPlayer.src = ""; 
+        
+        // 重置图库内容
+        modalGalleryImage.src = "";
+        currentGalleryItems = [];
+        currentGalleryIndex = 0;
+
+        // 清空文本内容
         modalTitleEl.textContent = '';
         modalTagsEl.innerHTML = '';
         modalDescriptionEl.innerHTML = '';
     };
     
     modalCloseBtn.addEventListener('click', closeModal);
-    videoModal.addEventListener('click', (event) => {
-        if (event.target === videoModal) {
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
             closeModal();
         }
     });
     document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && videoModal.classList.contains('is-open')) {
+        if (event.key === 'Escape' && modal.classList.contains('is-open')) {
             closeModal();
         }
     });
