@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作品集</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* --- CSS Reset & Global Styles --- */
+        :root {
+            --primary-color: #00bfa5;
+            --bg-color: #10121a; /* 稍带蓝调的深色背景 */
+            --card-bg-color: #1e2029;
+            --text-color: #e0e0e0;
+            --text-secondary-color: #a0a0a0;
+            --border-color: #2c2e3a;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --glow-color: rgba(0, 191, 165, 0.15); /* 悬停光晕颜色 */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(-45deg, #10121a, #1a1c23, #10121a, #1e2029);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite; /* 动态背景动画 */
+            color: var(--text-color);
+            line-height: 1.7;
+        }
+
+        /* 动态背景动画 */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3 {
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: var(--primary-color);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* --- 动画效果 --- */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 15px;
+        }
+        
+        .hero .subtitle {
+             font-size: 1.2rem;
+             color: var(--text-secondary-color);
+             max-width: 700px;
+             margin-bottom: 30px;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 12px 28px;
+            background-color: var(--primary-color);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 191, 165, 0.2);
+        }
+
+        /* --- Projects Section --- */
+        #projects {
+            padding: 80px 0;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background-color: var(--card-bg-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px var(--shadow-color), 0 0 20px var(--glow-color); /* 增加光晕效果 */
+        }
+
+        .project-card-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background-color: #333;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .project-card-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .project-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary-color);
+            flex-grow: 1;
+            margin-bottom: 20px;
+        }
+        
+        .project-tags {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .project-tags .tag {
+            background-color: rgba(0, 191, 165, 0.1);
+            color: var(--primary-color);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 15px;
+            margin-top: auto;
+        }
+
+        .project-links a, .project-links button {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .btn-demo {
+            background-color: var(--primary-color);
+            color: #fff;
+            cursor: pointer;
+        }
+        .btn-demo:hover {
+             background-color: #00a78d;
+             transform: scale(1.05);
+             box-shadow: 0 5px 15px rgba(0, 191, 165, 0.2);
+        }
+
+        .btn-source {
+            background-color: transparent;
+            color: var(--text-secondary-color);
+            border-color: var(--border-color);
+        }
+        .btn-source:hover {
+            background-color: var(--border-color);
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* --- Contact Section --- */
+        #contact {
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .contact-content p {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            color: var(--text-secondary-color);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .social-links a {
+            color: var(--text-secondary-color);
+            font-size: 1.8rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+            transform: scale(1.2);
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 25px;
+            background-color: var(--card-bg-color);
+            color: var(--text-secondary-color);
+            font-size: 0.9rem;
+        }
+
+        /* --- Video Modal (Left Video, Right Details) --- */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: none;
+            place-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            padding: 20px;
+        }
+
+        .modal.is-open {
+            display: grid;
+            opacity: 1;
+        }
+
+        .modal-container {
+            position: relative;
+            width: 100%;
+            max-width: 1400px; /* 增加最大宽度以容纳两栏 */
+            height: 90vh;
+            background-color: var(--card-bg-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-layout {
+            display: grid;
+            grid-template-columns: 60% 1fr; /* 左60% 右40% */
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .modal-video-wrapper {
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .modal-details-wrapper {
+            padding: 30px;
+            color: var(--text-color);
+            overflow-y: auto; /* 当内容超长时，允许滚动 */
+        }
+        
+        .modal-details-wrapper h3 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        #modalProjectTags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        #modalProjectTags .tag {
+            background-color: rgba(0, 191, 165, 0.1);
+            color: var(--primary-color);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        #modalProjectDescription {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-secondary-color);
+        }
+        
+        #modalProjectDescription ul {
+            list-style-type: none; /* 去掉默认的项目符号 */
+            padding-left: 0;
+        }
+        
+        #modalProjectDescription li {
+            position: relative;
+            padding-left: 25px; /* 为自定义项目符号留出空间 */
+            margin-bottom: 15px;
+        }
+        #modalProjectDescription li::before {
+            content: ""; /* 使用您提供的项目符号 */
+            position: absolute;
+            left: 0;
+            color: var(--primary-color); /* 让项目符号和主题色一致 */
+            font-weight: bold;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 2rem;
+            color: #fff;
+            background: rgba(0,0,0,0.3);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            z-index: 10;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        .modal-close:hover {
+            transform: rotate(90deg);
+            background-color: var(--primary-color);
+        }
+
+        /* 响应式布局：小屏幕上模态框堆叠 */
+        @media (max-width: 992px) {
+            .modal-layout {
+                grid-template-columns: 1fr; /* 变为单列 */
+                grid-template-rows: auto 1fr; /* 上视频下详情 */
+            }
+            .modal-video-wrapper {
+                 height: 40vh; /* 在移动端给视频一个固定的高度 */
+            }
+            .modal-details-wrapper {
+                padding: 25px;
+            }
+            .modal-details-wrapper h3 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <div class="fade-in">
+            <h1>您好，很荣幸与您在此相遇</h1>
+            <p class="subtitle">
+                我是一名热衷于让科技变得有乐趣的职场新人。初来乍到，往后请多多指点。
+            </p>
+            <a href="#projects" class="hero-cta">点击查看我的作品</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="projects" class="container">
+            <h2>作品集</h2>
+            <div class="projects-grid">
+
+                <article class="project-card fade-in" data-project-id="ai-home">
+                    <img src="https://f004.backblazeb2.com/file/image-num1/res/image/ai-mqtt-smarthome.png" alt="爱尚智慧家+" class="project-card-image">
+                    <div class="project-card-content">
+                        <h3>爱尚智慧家+</h3>
+                        <div class="project-tags">
+                            <span class="tag">全栈开发</span><span class="tag">AI助手</span><span class="tag">LLM微调</span><span class="tag">IoT</span><span class="tag">MQTT</span><span class="tag">Flask</span><span class="tag">Dify</span>
+                        </div>
+                        <p>主导开发集可视化管理与AI智能助理于一体的智能家居平台。实现了从前端、后端到AI模型的全栈构建，荣获校级二等奖。</p>
+                        <div class="project-links">
+                            <button class="btn-demo"><i class="fas fa-play"></i> 观看演示</button>
+                             <a href="#" class="btn-source" target="_blank" rel="noopener noreferrer"><i class="fas fa-code"></i> 待开源</a> 
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card fade-in" data-project-id="iflytek-car">
+                    <img src="https://f004.backblazeb2.com/file/image-num1/res/image/iflytekucar02.png" alt="讯飞智能车" class="project-card-image">
+                    <div class="project-card-content">
+                        <h3>讯飞智能车智慧生活赛</h3>
+                         <div class="project-tags">
+                            <span class="tag">队长</span><span class="tag">AI视觉</span><span class="tag">YOLOv8</span><span class="tag">RK3588</span><span class="tag">模型量化</span><span class="tag">PID</span>
+                        </div>
+                        <p>作为队长负责核心视觉系统开发。基于YOLOv8n在RK3588 NPU上实现29FPS实时推理，通过优化与量化，实现高精度目标检测与精准停靠。</p>
+                        <div class="project-links">
+                            <button class="btn-demo"><i class="fas fa-play"></i> 观看演示</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card fade-in" data-project-id="pcb-card">
+                    <img src="https://f004.backblazeb2.com/file/image-num1/res/image/nfc.png" alt="多功能 PCB 校园卡" class="project-card-image">
+                    <div class="project-card-content">
+                        <h3>多功能 PCB 校园卡</h3>
+                        <div class="project-tags">
+                            <span class="tag">硬件设计</span><span class="tag">PCB</span><span class="tag">NFC</span><span class="tag">产品设计</span><span class="tag">文创</span>
+                        </div>
+                        <p>独立主导完成一款创新型多功能PCB校园卡，集成了NFC、刻度尺和校园地图。已作为校园文创纪念品，并支持接入米家生态。</p>
+                        <div class="project-links">
+                            <button class="btn-demo"><i class="fas fa-play"></i> 观看演示</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card fade-in" data-project-id="linux-music-player">
+                    <img src="https://f004.backblazeb2.com/file/image-num1/res/image/linux-music-player.png" alt="Linux图形化音乐播放器" class="project-card-image">
+                    <div class="project-card-content">
+                        <h3>Linux图形化音乐播放器</h3>
+                        <div class="project-tags">
+                            <span class="tag">C++</span><span class="tag">SDL2</span><span class="tag">OpenGL</span><span class="tag">Dear ImGui</span><span class="tag">开源</span>
+                        </div>
+                        <p>独立开发的多功能Linux图形化音乐播放器。采用模块化设计，利用miniaudio处理音频，Dear ImGui构建GUI，并集成语音合成功能。</p>
+                        <div class="project-links">
+                             <button class="btn-demo"><i class="fas fa-play"></i> 观看演示</button>
+                            <a href="https://gitee.com/YOUNGQI-LYQ/music-player.git" class="btn-source" target="_blank" rel="noopener noreferrer"><i class="fab fa-gitee"></i> 查看源码</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card fade-in" data-project-id="linux-media-terminal">
+                    <img src="https://f004.backblazeb2.com/file/image-num1/res/image/linux-lcd.png" alt="Linux多媒体终端" class="project-card-image">
+                    <div class="project-card-content">
+                         <h3>Linux多媒体终端</h3>
+                        <div class="project-tags">
+                            <span class="tag">C/C++</span><span class="tag">Linux Framebuffer</span><span class="tag">嵌入式</span><span class="tag">多媒体</span><span class="tag">开源</span>
+                        </div>
+                        <p>在Linux环境下开发的交互式多功能嵌入式媒体应用。实现了电子相册、TTS电子书阅读器和电子琴功能。直接操作Framebuffer进行渲染。</p>
+                        <div class="project-links">
+                            <button class="btn-demo"><i class="fas fa-play"></i> 观看演示</button>
+                            <a href="https://gitee.com/YOUNGQI-LYQ/ubuntu-lcd-multimedia-terminal.git" class="btn-source" target="_blank" rel="noopener noreferrer"><i class="fab fa-gitee"></i> 查看源码</a>
+                        </div>
+                    </div>
+                </article>
+
+                 <article class="project-card fade-in" data-project-id="yijia-security">
+                    <img src="https://f004.backblazeb2.com/file/image-num1/res/image/smart-home.png" alt="宜家智能巡安防平台" class="project-card-image">
+                    <div class="project-card-content">
+                        <h3>宜家智能巡安防平台</h3>
+                        <div class="project-tags">
+                            <span class="tag">IoT</span><span class="tag">STM32</span><span class="tag">ESP32</span><span class="tag">机器人</span><span class="tag">项目协调</span>
+                        </div>
+                        <p>合作开发的智能居家安全巡检系统。负责项目规划、架构梳理与技术文档撰写。完成巡检小车与“桌宠”机器人的硬件联调。</p>
+                        <div class="project-links">
+                            <button class="btn-demo"><i class="fas fa-play"></i> 观看演示</button>
+                        </div>
+                    </div>
+                </article>
+                
+                 <article class="project-card fade-in" data-project-id="power-meter">
+                    <img src="https://f004.backblazeb2.com/file/image-num1/res/image/power-mot.png" alt="高精度数字功率计" class="project-card-image">
+                    <div class="project-card-content">
+                        <h3>高精度数字功率计</h3>
+                        <div class="project-tags">
+                            <span class="tag">硬件</span><span class="tag">STM32</span><span class="tag">数据可视化</span><span class="tag">SPI</span><span class="tag">开源</span>
+                        </div>
+                        <p>合作开发的高精度数字功率计。负责SPI接口的LCD图形界面开发，实现电流、电压、功率的实时数字与动态图表显示。</p>
+                        <div class="project-links">
+                             <button class="btn-demo"><i class="fas fa-play"></i> 观看演示</button>
+                            <a href="https://gitee.com/YOUNGQI-LYQ/power-monitior.git" class="btn-source" target="_blank" rel="noopener noreferrer"><i class="fab fa-gitee"></i> 查看源码</a>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <section id="contact" class="container">
+            <div class="contact-content fade-in">
+                <h2>与我联系</h2>
+                <p>感谢您的浏览！我对探索新技术、解决复杂问题充满热情。如果您对我的项目感兴趣或有任何合作机会，欢迎随时通过以下方式与我取得联系。</p>
+                <div class="social-links">
+                    <a href="https://blog.csdn.net/weixin_74256690 " target="_blank" title="个人博客"><i class="fas fa-blog"></i></a>
+
+                    <a href="https://gitee.com/YOUNGQI-LYQ" target="_blank" title="Gitee"><i class="fab fa-github"></i></a>
+                    <a href="mailto:1826633175@qq.com" title="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 YOUNGQI. All Rights Reserved.</p>
+    </footer>
+
+    <div class="modal" id="videoModal">
+        <div class="modal-container">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div class="modal-layout">
+                <div class="modal-video-wrapper">
+                    <video class="modal-video" id="modalVideoPlayer" controls preload="metadata">
+                         <source src="" type="video/mp4">
+                         您的浏览器不支持Video标签。
+                    </video>
+                </div>
+                <div class="modal-details-wrapper">
+                    <h3 id="modalProjectTitle"></h3>
+                    <div id="modalProjectTags"></div>
+                    <div id="modalProjectDescription"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const projectData = {
+        'ai-home': {
+            title: '爱尚智慧家+',
+            videoSrc: 'https://f004.backblazeb2.com/file/image-num1/video/ai-mqtt-smarthome.mp4',
+            backupSrc: 'https://imgcdn.youngqi.cn/video/ai-mqtt-smarthome.mp4',
+            tags: ['全栈开发', 'AI智能体', 'LLM微调', 'AIoT', 'MQTT', 'Flask', 'Dify', 'Chart.js', 'OpenAPI'],
+            description: `
+                <ul>
+                    <li>主导设计并开发“爱尚智慧家+”智能家居平台，集可视化管理与居家AI智能助理于一体，项目利用MQTT协议特性，构建一个开源方便接入管理的可视化智能居家平台，并且通过引入自定义居家AI助手来强化用户智能化体验和提供新的交互管理居家设备的体验并荣获校级二等奖及省赛推荐资格。</li>
+                    <li>实现了全栈式（前端、后端、部分硬件功能集成）的系统构建，核心采用MQTT协议进行高效、规范的设备通信与数据传输。</li>
+                    <li>平台前端利用Chart.js实现设备数据可视化分析与自定义管理，支持浏览器端数据本地导入导出。后端基于Flask构建符合OpenAPI规范的MQTT操作API及日志服务。</li>
+                    <li>AI居家助理部分通过Dify平台编排任务工作流，智能分发至基于Qwen3 1.7B微调的日常对话模型和专用于工具调用的Qwen3 14B大模型，让AI精准理解用户意图并高效调用MQTT工具操控智能家居。</li>
+                    <li>大模型微调部分通过自行蒸馏DeepSeekV3模型，并引入评分模型对原始数据进行高质量筛选与清洗。精心构建包含模型身份认定、居家对话、情感分析、居家百科等多样化居家场景合成语料。同时合理配比引入CoT数据集，有效强化模型在居家场景的逻辑推理能力与综合表现，确保其专业性与鲁棒性。</li>
+                </ul>`
+        },
+        'iflytek-car': {
+            title: '讯飞智能车智慧生活赛',
+            videoSrc: 'https://f004.backblazeb2.com/file/image-num1/video/iflytek-Ucar02.mp4',
+            backupSrc: 'https://imgcdn.youngqi.cn/video/iflytek-Ucar02.mp4',
+            tags: ['队长', 'AI视觉', 'YOLOv8', 'RK3588', '模型量化', 'PID控制', '数据增强'],
+            description: `
+                <ul>
+                    <li>作为队长负责核心的智能车视觉系统开发与部署，基于YOLOv8n模型，成功在RK3588平台的NPU上实现稳定29FPS的稳定最高帧率(相机输入上限帧率为30帧)、准确率达99%的高准确度的实时推理，有效应对复杂动态环境挑战，并实现了环岛巡线逻辑优化与板前精准停靠功能。</li>
+                    <li>视觉模型部分通过自主采集高保真数据并结合多角度、色彩、噪声引入等数据增强方法，显著提升数据集质量及模型鲁棒性。</li>
+                    <li>通过修改源码将激活函数由SiLU改为ReLU并将YOLOv8n模型导出为由单一输出头改为1*9多输出头的ONNX模型后加入验证数据集高效量化为INT8精度RKNN格式模型并优化推理线程池，确保模型在快速运动、多变光照及视距限制下仍保持高置信度与识别准确性。</li>
+                    <li>视觉巡线部分采用二值图像中线搜线法进行路径规划，结合霍夫变换精确识别停止位，并运用PID控制器实现底盘的精准运动控制。停靠部分创新性地融合模型检测到的物体轮廓中心像素位置与毫米波雷达深度信息，通过迭代调整相对位置，实现厘米级的板前精准停靠。</li>
+                </ul>`
+        },
+         'pcb-card': {
+            title: '多功能 PCB 校园卡',
+            videoSrc: 'https://f004.backblazeb2.com/file/image-num1/video/NFC-PCB.mp4',
+            backupSrc: 'https://imgcdn.youngqi.cn/video/NFC-PCB.mp4',
+            tags: ['硬件设计', 'PCB', 'NFC', '产品设计', '文创'],
+            description: `
+                <ul>
+                    <li>独立主导并完成一款创新型“多功能PCB校园卡”的硬件全流程设计与开发，涵盖系统概念、原理图绘制、PCB布局布线到最终打样与测试。</li>
+                    <li>该PCB校园卡巧妙集成NFC无源标签功能（基于NXP NT3H1101系列芯片，含PCB板载线圈），并融合高精度刻度尺与创意校园地图，兼顾实用性、美观度与用户体验细节。</li>
+                    <li>支持NDEF格式化为小米碰碰贴2接入米家生态。</li>
+                    <li>项目以其独特的创意与实用价值获得学院领导的高度认可，现已作为纪念品向社团提供，并且已交由新团队为项目通过小程序融入自制校园电子瓦片地图与在线360全景图打卡浮窗打卡作为校园迎新礼物或校园文创。</li>
+                </ul>`
+        },
+        'linux-music-player': {
+            title: 'Linux图形化音乐播放器',
+            videoSrc: 'https://f004.backblazeb2.com/file/image-num1/video/music-player.mp4',
+            backupSrc: 'https://imgcdn.youngqi.cn/video/music-player.mp4',
+            tags: ['C++', 'SDL2', 'OpenGL', 'Dear ImGui', 'miniaudio', '开源'],
+            description: `
+                <ul>
+                    <li>独立设计并开发一款现代化多功能的Linux图形化音乐播放器，基于C++、SDL2/OpenGL和Dear ImGui构建，并已在Gitee平台开源。</li>
+                    <li>项目采用模块化设计，利用miniaudio库高效处理音频解码与播放；通过互斥锁确保音频数据与主线程间的安全、并发共享。</li>
+                    <li>借助Dear ImGui构建直观、美观的现代化图形用户界面。</li>
+                    <li>成功集成科大讯飞开放平台SDK实现语音合成功能，支持快速接其他讯飞服务能力，通过CMake进行项目构建与管理。</li>
+                </ul>`
+        },
+        'linux-media-terminal': {
+            title: 'Linux多媒体终端',
+            videoSrc: 'https://f004.backblazeb2.com/file/image-num1/video/linux-lcd-app.mp4',
+            backupSrc: 'https://imgcdn.youngqi.cn/video/linux-lcd-app.mp4',
+            tags: ['C/C++', 'Linux Framebuffer', '嵌入式', '多媒体', '开源'],
+            description: `
+                <ul>
+                    <li>开发并实现一这交互式多功能的LCD嵌入式媒体应用 (基于C/C++混合编程，通过GNU Make构建，运行于x86/Ubuntu)。项目已在Gitee平台开源。</li>
+                    <li>项目支持缩放/平移的电子相册、集成TTS语音朗读的电子书阅读器，以及具备录音/回放功能的交互式电子琴。</li>
+                    <li>通过使用Linux Framebuffer进行底层高效图形渲染，Linux Input Event Subsystem处理多点触摸/鼠标事件，并利用POSIX API进行系统级资源管理与进程调度。</li>
+                    <li>集成libjpeg处理图片解码，整合mpg123实现MP3音频播放，利用iconv库优化中文编码并成功对接讯飞开放平台SDK，通过调用语音合成API实现听书功能。</li>
+                </ul>`
+        },
+        'yijia-security': {
+            title: '宜家智能巡安防平台',
+            videoSrc: 'https://f004.backblazeb2.com/file/image-num1/video/aiot-home.mp4',
+            backupSrc: 'https://imgcdn.youngqi.cn/video/aiot-home.mp4',
+            tags: ['AIoT', 'STM32', 'ESP32', '机器人', '项目协调'],
+            description: `
+                <ul>
+                    <li>合作设计与开发基于Cortex-M系列微控制器（STM32F103主从控）与ESP32的智能居家安全巡检系统，项目旨在利用移动机器人进行环境实时监控（温湿度、烟雾等），并通过创新性的人机交互终端“桌宠机器人”与接入TLINK物联网云平台实现数据的可视化呈现、远程控制与异常警报功能。</li>
+                    <li>负责项目整体计划制定、系统架构梳理、团队协作协调及全部技术文档（设计方案、使用手册、最终报告）的撰写与整理，确保项目按时高质量完成。</li>
+                    <li>并负责巡检小车的机械结构设计、3D打印与组装，并完成小车与“桌宠机器人”各硬件模块的联调测试，确保系统稳定运行和物理联动。</li>
+                    <li>集成蓝牙、语音模块和ESP32-CAM实现局域网内实时图传和传感器数据异常超标时自动触发精准语音播报预警，极大提升系统预警及时性与用户感知度。</li>
+                </ul>`
+        },
+        'power-meter': {
+            title: '高精度数字功率计',
+            videoSrc: 'https://f004.backblazeb2.com/file/image-num1/video/PowerMonitior.mp4',
+            backupSrc: 'https://imgcdn.youngqi.cn/video/PowerMonitior.mp4',
+            tags: ['硬件', 'STM32', '数据可视化', 'SPI', '开源'],
+            description: `
+                <ul>
+                    <li>合作设计与开发一款基于STM32F103C8T6的高精度数字功率计，实现0-3A/3-30V宽范围电量监测，并集成用户友好的实时数据可视化界面。</li>
+                    <li>项目采用INA226传感器进行高精度电源参数检测，并通过定时器中断实现高效、周期性数据采样，确保了实时性与测量准确度。</li>
+                    <li>负责SPI接口的LCD图形界面开发，以及硬件部分测试，为功率计构建了模块化、直观且具备数据分析能力的人机交互界面。</li>
+                    <li>成功实现了电流、电压、功率的同步数字显示，并创新性地实现了带有历史趋势追踪的动态可变长度数轴图表显示，极大提升了用户对设备运行状态的洞察力与便捷性。项目已在Gitee与立创平台开源。</li>
+                </ul>`
+        }
+    };
+
+    const animatedElements = document.querySelectorAll('.fade-in');
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    const isCard = entry.target.classList.contains('project-card');
+                    const delay = isCard ? (index % 3) * 100 : 0; // Stagger animation for cards in a row
+                    setTimeout(() => {
+                         entry.target.classList.add('is-visible');
+                    }, delay);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        animatedElements.forEach(el => observer.observe(el));
+    } else {
+        animatedElements.forEach(el => el.classList.add('is-visible'));
+    }
+
+    const videoModal = document.getElementById('videoModal');
+    const modalVideoPlayer = document.getElementById('modalVideoPlayer');
+    const modalCloseBtn = document.getElementById('modalClose');
+    const demoButtons = document.querySelectorAll('.btn-demo');
+    
+    const modalTitleEl = document.getElementById('modalProjectTitle');
+    const modalTagsEl = document.getElementById('modalProjectTags');
+    const modalDescriptionEl = document.getElementById('modalProjectDescription');
+
+    demoButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const projectCard = button.closest('.project-card');
+            const projectId = projectCard.dataset.projectId;
+            const data = projectData[projectId];
+
+            if (!data) {
+                console.error(`未找到ID为 "${projectId}" 的项目数据。`);
+                return;
+            }
+
+            modalTitleEl.textContent = data.title;
+            modalDescriptionEl.innerHTML = data.description;
+            
+            modalTagsEl.innerHTML = '';
+            data.tags.forEach(tagText => {
+                const tagEl = document.createElement('span');
+                tagEl.className = 'tag';
+                tagEl.textContent = tagText;
+                modalTagsEl.appendChild(tagEl);
+            });
+
+            modalVideoPlayer.src = data.videoSrc;
+            modalVideoPlayer.onerror = () => {
+                console.warn(`主视频源 ${data.videoSrc} 加载失败，尝试备用源...`);
+                modalVideoPlayer.src = data.backupSrc;
+                modalVideoPlayer.onerror = null;
+            };
+
+            videoModal.classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+            modalVideoPlayer.play();
+        });
+    });
+
+    const closeModal = () => {
+        videoModal.classList.remove('is-open');
+        document.body.style.overflow = '';
+        modalVideoPlayer.pause();
+        modalVideoPlayer.src = ""; 
+        modalTitleEl.textContent = '';
+        modalTagsEl.innerHTML = '';
+        modalDescriptionEl.innerHTML = '';
+    };
+    
+    modalCloseBtn.addEventListener('click', closeModal);
+    videoModal.addEventListener('click', (event) => {
+        if (event.target === videoModal) {
+            closeModal();
+        }
+    });
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && videoModal.classList.contains('is-open')) {
+            closeModal();
+        }
+    });
+});
+</script>
+
+</body>
+</html>
